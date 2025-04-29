@@ -1,0 +1,53 @@
+﻿@model HealthyPawsV2.DAL.PetBreed
+
+@{
+    ViewData["Title"] = "Editar Raza de Mascota";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Editar Raza de Mascota</h1>
+    </div>
+
+    <div class="card-body">
+
+        <hr />
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="petBreedId" />
+
+            <div class="form-group">
+                <label asp-for="petTypeId" class="control-label"></label>
+                <select asp-for="petTypeId" class="form-control" asp-items="ViewBag.petTypeId"></select>
+                <span asp-validation-for="petTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            <p></p>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="status" /> @Html.DisplayNameFor(model => model.status)
+                </label>
+            </div>
+            <p></p>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

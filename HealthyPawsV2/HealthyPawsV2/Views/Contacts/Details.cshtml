@@ -1,0 +1,44 @@
+﻿@model HealthyPawsV2.DAL.Contact
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Detalles de Contacto</h1>
+    </div>
+
+    <div class="card-body">
+        <h4>Información del Contacto</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.WhatsApp)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.WhatsApp)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model?.contactId" class="btn btn-outline-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

@@ -1,0 +1,171 @@
+﻿@model HealthyPawsV2.DAL.Document
+
+@{
+    ViewData["Title"] = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Función para identificar el tipo de archivo según el número mágico (magic number) -->
+@functions {
+    private string GetFileTypeMagicNumber(byte[] fileBytes)
+    {
+        if (fileBytes.Length > 4)
+        {
+            if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8)
+                return "image";
+            if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 && fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
+                return "image";
+            if (fileBytes[0] == 0x25 && fileBytes[1] == 0x50 && fileBytes[2] == 0x44 && fileBytes[3] == 0x46)
+                return "pdf";
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "word";
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "excel";
+        }
+        return "unknown";
+    }
+}
+
+<h1>Detalles del Documento</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Información del Documento</h5>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.AppointmentId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.petFileId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.petFileId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.name)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.category)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.category)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.fileType)
+            </dt>
+            <dd class="col-sm-9">
+                <div class="mt-3">
+                    @if (Model.fileType != null && Model.fileType.Length > 0)
+                    {
+                        var fileTypeMagicNumber = GetFileTypeMagicNumber(Model.fileType);
+
+                        if (fileTypeMagicNumber == "image")
+                        {
+                            
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="data:image;base64,@Convert.ToBase64String(Model.fileType)">
+                                <img class="img-fluid" src="data:image;base64,@Convert.ToBase64String(Model.fileType)" alt="@Model.name" style="width: 90px; height: 90px;" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "pdf")
+                        {
+                            
+                            <a href="data:application/pdf;base64,@Convert.ToBase64String(Model.fileType)" download="@Model.name">
+                                <img src="/images/pdf.png" alt="PDF" class="file-icon" style="width: 40px; height: 40px;" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "word")
+                        {
+                            
+                            <a href="data:application/msword;base64,@Convert.ToBase64String(Model.fileType)" download="@Model.name">
+                                <img src="/images/doc.png" alt="Documento Word" class="file-icon" style="width: 40px; height: 40px;" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "excel")
+                        {
+                           
+                            <a href="data:application/vnd.ms-excel;base64,@Convert.ToBase64String(Model.fileType)" download="@Model.name">
+                                <img src="/images/excel.png" alt="Excel" class="file-icon" style="width: 40px; height: 40px;" />
+                            </a>
+                        }
+                        else
+                        {
+                            <span>Archivo no soportado</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>No hay archivo adjunto</span>
+                    }
+                </div>
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.status)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.documentId" class="btn colorButton">Editar</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+<!-- Modal for the Images -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Imagen del Examen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" class="img-fluid" alt="Imagen del examen" />
+            </div>
+            <div class="modal-footer">
+                <a id="downloadButton" class="btn colorButton" download="imagen-examen.jpg">Descargar Imagen</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para actualizar el modal con la imagen y habilitar la descarga -->
+<script>
+    var myModal = document.getElementById('imageModal')
+    myModal.addEventListener('show.bs.modal', function (event) {
+        // Obtener el enlace que abrió el modal
+        var triggerElement = event.relatedTarget;
+        // Obtener el src de la imagen (data:image;base64...)
+        var imageSrc = triggerElement.getAttribute('data-image');
+
+        // Actualizar la imagen en el modal
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = imageSrc;
+
+        // Habilitar el botón de descarga
+        var downloadButton = document.getElementById('downloadButton');
+        downloadButton.setAttribute('href', imageSrc);
+        downloadButton.setAttribute('download', 'imagen-examen.jpg');
+    });
+</script>
+
+
+

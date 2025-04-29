@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HealthyPawsV2</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background-image: url('/images/golden_dogs.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column vh-100">
+    <header>
+    </header>
+    <div class="container-fluid flex-fill d-flex justify-content-center align-items-center">
+        <main role="main" class="w-100">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted py-3">
+        <div class="container" style="text-align:center;">
+            <!-- Existing contact information -->
+            <div class="container" style="background-color: rgba(178,90,40,0.8); border-radius: 15px; padding: 10px; color: white;">
+                ¿Quiere agendar una cita? Contáctanos - <a asp-area="" asp-controller="Contacts" asp-action="Contact"> <strong>Aquí</strong></a>
+            </div>
+
+            <!-- Vet Address and Facebook Link -->
+            <div style="margin-bottom: 10px; color: white;font-size: 0.9rem;">
+                <br />
+                <strong>Dirección:</strong> 500mts este de la Rotonda de La Bandera, Sabanilla de Montes de Oca, Costa Rica |
+                <strong>Síguenos en Facebook: </strong>
+                <a href="https://www.facebook.com/clinicavetsanmartin" target="_blank" style="color: white; text-decoration: none;">
+                    <img src="/images/facebook_icon.png" alt="Facebook" style="width: 20px; height: 20px; margin-right: 5px;">Clinica Veterinaria San Martin del Este
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

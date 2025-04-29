@@ -1,0 +1,94 @@
+﻿@model HealthyPawsV2.DAL.Appointment
+
+@{
+    ViewData["Title"] = "Appointment Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Detalle de la Cita</h1>
+    </div>
+
+    <div class="card-body">
+        <h4>Información de la cita</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.AppointmentId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.petFileId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.petFileId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ownerId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.owner.name)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.vetId)
+            </dt>
+            <dd class="col-sm-9">
+                @{
+                    var vets = ViewData["Vets"] as IEnumerable<SelectListItem>;
+                    var vetName = vets?.FirstOrDefault(v => v.Value == Model.vetId)?.Text ?? "Unknown Vet";
+                }
+                @vetName
+            </dd>
+
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.description)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.description)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.status)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.diagnostic)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.diagnostic)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Additional)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Additional)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.AppointmentId" class="btn colorButton">Editar</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

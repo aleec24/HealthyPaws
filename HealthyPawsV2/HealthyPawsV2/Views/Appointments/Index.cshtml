@@ -1,0 +1,176 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.Appointment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }  
+</style>
+
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchAppointment" name="searchAppointment" class="form-control rounded-input" placeholder="Buscar Cita..." />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn  colorButton" data-bs-toggle="modal" data-bs-target="#AddAppointment" >Crear Cita</button>
+        }
+    </div>
+</div>
+<br />
+
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class="text-white">@Html.DisplayNameFor(model => model.AppointmentId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.PetFile.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.owner.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.vetId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.Date)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.description)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.status)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.diagnostic)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.Additional)</th>
+            <th class="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.AppointmentId)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetFile.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.owner.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.vet.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                <td>@Html.DisplayFor(modelItem => item.description)</td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>@Html.DisplayFor(modelItem => item.diagnostic)</td>
+                <td>@Html.DisplayFor(modelItem => item.Additional)</td>
+                <td>
+                    <div class="d-flex" style="gap: 5px; margin-top: 2%">
+                        <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm">Detalles</a>
+
+                        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" >Editar</a>
+                            <a class="btn btn-danger btn-sm CancelarCita" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Cancelar</a>
+                            
+
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!--In case there is no Pets under the name looked-->
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
+
+
+@* MODAL *@
+<div class="modal fade" id="AddAppointment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Cita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+                            <div class="form-group">
+                                <label for="petFileId" class="control-label">Nombre de la Mascota</label>
+                                <select name="petFileId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la Mascota</option>
+                                    @foreach (var pet in ViewBag.Pets)
+                                    {
+                                        <option value="@pet.Value">@pet.Text</option>
+                                    }
+                                </select>
+                                <span validation-for="petFileId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="ownerId" class="control-label">Nombre del Dueño</label>
+                                <select name="ownerId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Dueño</option>
+                                    @foreach (var owner in (SelectList)ViewData["Owners"])
+                                    {
+                                        <option value="@owner.Value">@owner.Text</option>
+                                    }
+                                </select>
+                                <span validation-for="ownerId" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="vetId" class="control-label">Nombre del Veterinario</label>
+                                <select name="vetId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Veterinario</option>
+                                    @foreach (var vet in (SelectList)ViewData["Vets"])
+                                    {
+                                        <option value="@vet.Value">@vet.Text</option>
+                                    }
+                                </select>
+                                <span validation-for="vetId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Date" class="control-label">Fecha</label>
+                                <input type="datetime-local" name="Date" class="form-control" required />
+                                <span validation-for="Date" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="control-label">Descripción</label>
+                                <input type="text" name="description" class="form-control" />
+                                <span validation-for="description" class="text-danger"></span>
+                            </div>
+
+                            @* <div class="form-group">
+                                <label for="diagnostic" class="control-label">Diagnóstico</label>
+                                <input type="text" name="diagnostic" class="form-control" />
+                                <span validation-for="diagnostic" class="text-danger"></span>
+                            </div> *@
+
+                            <div class="form-group">
+                                <label for="Additional" class="control-label">Adicional</label>
+                                <textarea name="Additional" class="form-control"></textarea>
+                                <span validation-for="Additional" class="text-danger"></span>
+                            </div>
+
+                            <br />
+                            <div class="form-group">
+                                <input type="submit" value="Crear" class="btn colorButton" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

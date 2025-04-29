@@ -1,0 +1,41 @@
+﻿@model HealthyPawsV2.DAL.Contact
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Eliminar Contacto</h1>
+    </div>
+
+    <div class="card-body">
+        <h3>¿Está seguro de que desea eliminar este contacto?</h3>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="contactId" />
+            <input type="submit" value="Eliminar" class="btn btn-danger" />
+        </form>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

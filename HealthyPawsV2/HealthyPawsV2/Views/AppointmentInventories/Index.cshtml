@@ -1,0 +1,171 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.AppointmentInventory>
+
+@{
+    ViewData["Title"] = "Módulo de Cita-Inventario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchInvApp" name="searchInvApp" class="form-control rounded-input" placeholder="Buscar medicamento en la cita ..." />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+
+
+<!-- Botón para agregar y filtro de estado -->
+<div class="row">
+    <div class="col-md-6">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AgregarMedicinaEnCita">Agregar Medicamento en la Cita</button>
+        }
+    </div>
+    <div class="col-md-6 text-end">
+        <form asp-action="Index" method="get" class="form-inline">
+            <input type="hidden" name="searchInvApp" value="@ViewData["searchInvApp"]" />
+
+            <label class="toggle-label" for="statusFilterInvApp">Mostrar:</label>
+            <select id="statusFilterInvApp" name="statusFilterInvApp" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+                <option value="active" selected="@(ViewData["statusFilterInvApp"]?.ToString() == "active" ? "selected" : null)">Activos</option>
+                <option value="inactive" selected="@(ViewData["statusFilterInvApp"]?.ToString() == "inactive" ? "selected" : null)">Inactivos</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+<br />
+
+<!-- Tabla con resultados de inventario de citas -->
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().appointmentInventoryId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Inventory.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().dose)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().measuredose)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Inventory.brand)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Appointment.AppointmentId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().status)</th>
+            <th class="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.appointmentInventoryId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Inventory.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.dose)</td>
+                <td>@Html.DisplayFor(modelItem => item.measuredose)</td>
+                <td>@Html.DisplayFor(modelItem => item.Inventory.brand)</td>
+                <td>@Html.DisplayFor(modelItem => item.Appointment.AppointmentId)</td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.appointmentInventoryId" class="btn btn-secondary btn-sm">Detalles</a>
+                    @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.appointmentInventoryId" class="btn btn-primary btn-sm">Editar</a>
+                        @if ((string)ViewData["statusFilterInvApp"] == "active")
+                        {
+                            <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.appointmentInventoryId">Eliminar</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Mensaje en caso de no encontrar resultados -->
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
+<br />
+<br /> 
+
+
+@* MODAL *@
+<div class="modal fade" id="AgregarMedicinaEnCita" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Medicamento en la Cita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <!-- Desplegable para seleccionar la Cita -->
+                            <div class="form-group">
+                                <label for="appointmentId" class="control-label">Numero de cita: </label>
+                                <select name="appointmentId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la cita</option>
+                                    @foreach (var cita in (SelectList)ViewData["Citas"])
+                                    {
+                                        <option value="@cita.Value">@cita.Text</option>
+                                    }
+                                </select>
+                                <span validation-for="appointmentId" class="text-danger"></span>
+                            </div>
+                            <!-- Desplegable para seleccionar la medicina -->
+                            <div class="form-group">
+                                <label for="inventoryID" class="control-label">Nombre del medicamento</label>
+                                <select name="inventoryID" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Medicamento</option>
+                                    @foreach (var med in (SelectList)ViewData["Medicamentos"])
+                                    {
+                                        <option value="@med.Value">@med.Text</option>
+                                    }
+                                </select>
+                                <span validation-for="inventoryID" class="text-danger"></span>
+                            </div>                   
+                            <!-- Campo de texto para la Dosis -->
+                            <div class="form-group">
+                                <label for="dose" class="control-label">Dosis</label>
+                                <input type="text" name="dose" class="form-control" />
+                                <span validation-for="dose" class="text-danger"></span>
+                            </div>
+
+                            <!-- Desplegable para seleccionar la Unidad de Medida -->
+                            <div class="form-group">
+                                <label for="measuredose" class="control-label">Medida</label>
+                                <select id="measuredose" name="measuredose" class="form-control">
+                                    <option value="" disabled selected>Seleccione la medida</option>
+                                    <option value="mg">mg</option>
+                                    <option value="ml">ml</option>
+                                    <option value="gr">gr</option>
+                                    <option value="oz">oz</option>
+                                </select>
+                                <span validation-for="measuredose" class="text-danger"></span>
+                            </div>
+
+
+                            <br />
+                            <div class="form-group">
+                                <input class="btn colorButton"  type="submit" value="Crear" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,76 @@
+﻿@model HealthyPawsV2.DAL.ApplicationUser
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+}
+
+<h1>Detalles del Usuario</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Usuario</h5>
+        <hr />
+
+        <dl class="row">
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.name)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.name)
+            </p>
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.surnames)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.surnames)
+            </p>
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.idNumber)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.idNumber)
+            </p>
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.phone1)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.phone1)
+            </p>
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.phone2)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.phone2)
+            </p>
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.phone3)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.phone3)
+            </p>
+            <div class="card-subtitle">
+                <h6>@Html.DisplayNameFor(model => model.Email)</h6>
+            </div>
+            <p class="card-text">
+                @Html.DisplayFor(model => model.Email)
+            </p>
+            <div class="card-subtitle">
+                <h6>Estado</h6>
+            </div>
+            <p class="card-text">
+                @if (Model.status)
+                {
+                    <span style="color: green;">Activo</span>
+                }
+                else
+                {
+                    <span style="color: red;">Inactivo</span>
+                }
+            </p>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn colorButton">Editar</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver a la Lista</a>
+    </div>
+</div>

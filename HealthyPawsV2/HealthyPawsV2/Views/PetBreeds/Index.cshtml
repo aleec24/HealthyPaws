@@ -1,0 +1,120 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.PetBreed>
+
+
+
+<!--This is a Searh Bar to Look for the names of the Pets in case we want to find any specific of them-->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetBreed" name="searchPetBreed" class="form-control rounded-input" placeholder="Buscar Raza de Mascota..." />
+            </div>
+        </form>
+    </div>
+</div>
+
+<p></p>
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn  colorButton" data-bs-toggle="modal" data-bs-target="#AñadirRaza">Añadir Raza de Mascota</button>
+    </div>
+    <div class="col-md-6 text-end">
+        <form asp-action="Index" method="get" class="form-inline">
+            <input type="hidden" name="searchPetBreed" value="@ViewData["searchPetBreed"]" />
+
+            <label class="toggle-label" for="statusFilterPetBreed">Mostrar:</label>
+            <select id="statusFilterPetBreed" name="statusFilterPetBreed" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+                <option value="active" selected="@(ViewData["statusFilterPetBreed"]?.ToString() == "active" ? "selected" : null)">Activos</option>
+                <option value="inactive" selected="@(ViewData["statusFilterPetBreed"]?.ToString() == "inactive" ? "selected" : null)">Inactivos</option>
+            </select>
+        </form>
+    </div>
+</div>
+<br />
+
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+        <tr>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().petBreedId)</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().name)</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().status)</th>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().petTypeId)</th>
+            <th class ="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.petBreedId)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetType.name)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.petBreedId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.petBreedId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petBreedId">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+} 
+
+
+@* Modal *@
+<div class="modal fade" id="AñadirRaza" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Raza de Mascota</h5>
+                <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label for="petTypeId">Tipo de Mascota</label>
+                                <select name="petTypeId" class="form-control">
+                                    <option value="">Seleccione un tipo de mascota</option>
+                                    @foreach (var petType in ViewBag.PetTypes)
+                                    {
+                                        <option value="@petType.petTypeId">@petType.name</option>
+                                    }
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Raza</label>
+                                <input type="text" name="name" class="form-control" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            
+
+                            <br />
+                            <div class="form-group">
+                                <input type="submit" value="Crear" class="btn colorButton" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

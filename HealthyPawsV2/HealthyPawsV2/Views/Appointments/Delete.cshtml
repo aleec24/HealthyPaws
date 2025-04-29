@@ -1,0 +1,89 @@
+﻿@model HealthyPawsV2.DAL.Appointment
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Eliminar Cita</h1>
+    </div>
+
+    <div class="card-body">
+        <h3>Está seguro que desea elmininar esta cita?</h3>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.AppointmentId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.AppointmentId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.petFileId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.petFileId)
+            </dd> 
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.vetId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.vetId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.description)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.description)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.status)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.diagnostic)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.diagnostic)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Additional)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Additional)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ownerId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.owner.name)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="AppointmentId" />
+            <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+            <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+        </form>
+    </div>
+</div>

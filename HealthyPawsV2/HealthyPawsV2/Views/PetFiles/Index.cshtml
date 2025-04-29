@@ -1,0 +1,285 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.PetFile>
+
+
+<!--This is a Searh Bar to Look for the names of the Pets in case we want to find any specific of them-->
+@* <div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control rounded-input" placeholder="Buscar expediente..." />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!--This is the Button that we use to Create New Pets-->
+
+<div class="row ">
+    <div class="col-md-6">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet"))){
+        <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExpediente">Abrir Expediente</button>
+            }
+    </div>
+    <div class= "col-md-6 text-end">
+        <label class="toggle-label" for="statusFilterPet">Mostrar:</label>
+        <select id="statusFilterPet" name="statusFilterPet" asp-for="@ViewData["statusFilterPet"]" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+            <option value="active">Activos</option>
+            <option value="inactive">Inactivos</option>
+        </select>
+    </div>
+
+
+</div> *@
+<!-- Barra de búsqueda para buscar expedientes de mascotas -->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchPetFile" name="searchPetFile" class="form-control rounded-input" placeholder="Buscar expediente..." />
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Botón para abrir un nuevo expediente y filtro de estado -->
+<div class="row">
+    <div class="col-md-6">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExpediente">Abrir Expediente</button>
+        }
+    </div>
+    <div class="col-md-6 text-end">
+        <form asp-action="Index" method="get" class="form-inline">
+            <input type="hidden" name="searchPetFile" value="@ViewData["searchPetFile"]" />
+
+            <label class="toggle-label" for="statusFilterPet">Mostrar:</label>
+            <select id="statusFilterPet" name="statusFilterPet" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+                <option value="active" selected="@(ViewData["statusFilterPet"]?.ToString() == "active" ? "selected" : null)">Activos</option>
+                <option value="inactive" selected="@(ViewData["statusFilterPet"]?.ToString() == "inactive" ? "selected" : null)">Inactivos</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+<br />
+
+<!--Table with results of the Pets we have in the System-->
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class ="text-white">@Html.DisplayNameFor(model => model.First().petFileId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Owner.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.PetBreed.PetType.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.PetBreed.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.gender)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.age)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.weight)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.castration)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.description)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.status)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.creationDate)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.vaccineHistory)</th>
+            <th class="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.petFileId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Owner.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetBreed.PetType.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.PetBreed.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.gender)</td>
+                <td>@Html.DisplayFor(modelItem => item.age)</td>
+                <td>@Html.DisplayFor(modelItem => item.weight)<span> KG</span></td>
+                <td>@Html.DisplayFor(modelItem => item.castration)</td>
+                <td>@Html.DisplayFor(modelItem => item.description)</td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>@Html.DisplayFor(modelItem => item.creationDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.vaccineHistory)</td>
+                <td>
+                    <div class="d-flex" style="gap: 5px; margin-top: 2%">
+                        <a asp-action="Details" asp-route-id="@item.petFileId" class="btn btn-secondary btn-sm">Detalles</a>
+
+                        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.petFileId" class="btn btn-primary btn-sm">Editar</a>
+                            @if ((string)ViewData["StatusFilterPet"] == "active")
+                            {
+                                <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.petFileId">Eliminar</a>
+                            }
+                        }                      
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!--In case there is no Pets under the name looked-->
+@if ((bool)ViewBag.NoResultados)
+{
+    <p>No se encuentran resultados de búsqueda.</p>
+}
+<br />
+<br /> 
+
+
+<!--This is the Modal for the New PetFiles we are going to create-->
+<div class="modal fade" id="AbrirExpediente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Mascota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form asp-action="Create" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label for="name">Nombre</label>
+                                <input type="text" name="name" class="form-control" placeholder="Ej: Bolita" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ownerId">Seleccione al Dueño</label>
+                                <select name="ownerId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione al Dueño</option>
+                                    @foreach (var user in ViewBag.Owners)
+                                    {
+                                        <option value="@user.Value">@user.Text</option>
+                                    }
+                                </select>
+                                
+                            </div>
+
+                            <div class="form-group">
+                                <label for="petTypeId">Tipo de Mascota</label>
+                                <select name="petTypeId" id="petTypeId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Tipo de Mascota</option>
+                                    @foreach (var petType in ViewBag.PetTypes)
+                                    {
+                                        <option value="@petType.Value">@petType.Text</option>
+                                    }
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="petBreedId">Raza de la Mascota</label>
+                                <select name="petBreedId" id="petBreedId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la Raza de la Mascota</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="gender">Género</label>
+                                <select name="gender" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el Género de la Mascota</option>
+                                    <option value="Hembra">Hembra</option>
+                                    <option value="Macho">Macho</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="age">Edad</label>
+                                <input type="number" name="age" class="form-control" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="weight">Peso</label>
+                                <input type="number" name="weight" class="form-control" placeholder="KG" required />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vaccineHistory">Historial de Vacunas</label>
+                                <input type="text" name="vaccineHistory" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="castration">Castración</label>
+                                <select name="castration" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el tipo de Castración</option>
+                                    <option value="No">No</option>
+                                    <option value="Ovariohisterectomía">Ovariohisterectomía</option>
+                                    <option value="Orquiectomía">Orquiectomía</option>
+                                </select>
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Descripción</label>
+                                <input type="text" name="description" class="form-control" />
+                                <span class="text-danger"></span>
+                            </div>
+
+                            <br />
+                            <div class="form-group">
+                                <input type="submit" value="Crear" class="btn colorButton" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#petTypeId").change(function () {
+            var petTypeId = $(this).val();
+
+            // Si no hay nada seleccionado, limpiar el select de razas mascota
+            if (!petTypeId) {
+                $("#petBreedId").html('<option value="" disabled selected>Seleccione la Raza de la Mascota</option>');
+                return;
+            }
+
+            // Hacer el request por AJAX para obtener las razas basado en el tipo de mascota seleccionado
+            $.ajax({
+                url: '@Url.Action("GetBreedsByType", "PetFiles")',
+                type: 'GET',
+                data: { petTypeId: petTypeId },
+                success: function (data) {
+                    var petBreedDropdown = $("#petBreedId");
+                    petBreedDropdown.empty();
+                    petBreedDropdown.append('<option value="" disabled selected>Seleccione la Raza de la Mascota</option>');
+
+                    $.each(data, function (index, item) {
+                        petBreedDropdown.append($('<option>', {
+                            value: item.petBreedId,
+                            text: item.name
+                        }));
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+

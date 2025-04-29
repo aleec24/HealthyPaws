@@ -1,0 +1,86 @@
+﻿@model HealthyPawsV2.DAL.Inventory
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Detalles del Inventario</h1>
+    </div>
+
+    <div class="card-body">
+        <h4>Información del Producto</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.name)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.category)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.category)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.brand)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.brand)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.availableStock)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.availableStock)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.description)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.description)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.price)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.price)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.provider)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.provider)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.providerInfo)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.providerInfo)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.State)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.State)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model?.inventoryId" class="btn colorButton">Editar</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

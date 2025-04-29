@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyPawsV2", "HealthyPawsV2\HealthyPawsV2.csproj", "{AB70FC5C-5A0C-4C07-BF31-523ECBF54C4F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyPawsV2.DAL", "HealthyPawsV2.DAL\HealthyPawsV2.DAL.csproj", "{151761D1-1DA9-45DA-8298-E3DA9D0EAA81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB70FC5C-5A0C-4C07-BF31-523ECBF54C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB70FC5C-5A0C-4C07-BF31-523ECBF54C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB70FC5C-5A0C-4C07-BF31-523ECBF54C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB70FC5C-5A0C-4C07-BF31-523ECBF54C4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{151761D1-1DA9-45DA-8298-E3DA9D0EAA81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{151761D1-1DA9-45DA-8298-E3DA9D0EAA81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{151761D1-1DA9-45DA-8298-E3DA9D0EAA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{151761D1-1DA9-45DA-8298-E3DA9D0EAA81}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {38535EEC-3811-4D35-AFE5-E50B74E5DDAA}
+	EndGlobalSection
+EndGlobal

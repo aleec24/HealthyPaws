@@ -1,0 +1,113 @@
+﻿@model HealthyPawsV2.DAL.PetFile
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Detalles del Archivo de Mascota</h1>
+    </div>
+
+    <div class="card-body">
+        <h4>Información del Archivo</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ownerId)
+            </dt>
+            <dd class="col-sm-9">
+                @{
+                    var owners = ViewData["Owners"] as IEnumerable<SelectListItem>;
+                    var ownerName = owners?.FirstOrDefault(o => o.Value == Model.ownerId)?.Text ?? "Unknown Owner";
+                }
+                @ownerName
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.name)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.petTypeId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.petTypeId)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.gender)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.gender)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.age)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.age)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.weight)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.weight)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.creationDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.creationDate)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.vaccineHistory)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.vaccineHistory)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.castration)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.castration)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.description)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.description)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.status)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.petBreedId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.PetBreed.name)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+         @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet"))){
+        <a asp-action="Edit" asp-route-id="@Model?.petFileId" class="btn colorButton">Editar</a>
+         }
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

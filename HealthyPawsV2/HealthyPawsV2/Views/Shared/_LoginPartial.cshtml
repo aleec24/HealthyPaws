@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using HealthyPawsV2.DAL;
+@using HealthyPawsV2.Utils
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+	@if (SignInManager.IsSignedIn(User))
+	{
+
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <li class="nav-item" style="padding-right:20px;">
+                <a asp-area="" asp-controller="Inventories" asp-action="Notifications">
+                    <i class="fa-regular fa-bell" style="font-size:25px; color: rgba(178,90,40,0.8); padding-top:14px"></i>
+                </a>
+            </li>
+
+        }
+
+        <li class="nav-item" style=" padding-right:5px;">
+            <button class="btn btn-link" style="border: none; background-color:white" onclick="window.open('https://web.whatsapp.com', '_blank')">
+                <i class="fa-brands fa-whatsapp" style="font-size:30px; color:green; padding-top:5px"></i>
+            </button>
+        </li>
+
+
+        <li class="nav-item">
+            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="" method="post">
+                <button type="submit" class="btn btn-link" style="color:black">
+                    <i class="bi bi-box-arrow-right" style="font-size: 25px;"></i>
+                </button>
+            </form>
+        </li>
+    }
+	else
+	{
+		<li class="nav-item">
+			<a class="navbar-brand" style="font-size:18px; padding: 10px 20px; background-color: rgba(178,90,40,0.8); border-radius: 10px; display: inline-block; color: white;" asp-area="Identity" asp-page="/Account/Login">
+				Iniciar Sesión
+			</a>
+		</li>
+	}
+</ul>

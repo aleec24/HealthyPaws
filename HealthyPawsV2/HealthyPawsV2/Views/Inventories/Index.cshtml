@@ -1,0 +1,176 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.Inventory>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<!-- Barra de búsqueda para buscar medicamentos o productos en inventario -->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="searchInventory" name="searchInventory" class="form-control rounded-input" placeholder="Buscar en Inventario..." />
+            </div>
+        </form>
+    </div>
+</div>
+<p></p>
+
+
+<!-- Botón para agregar inventario y filtro de estado -->
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AddInventory">Añadir Producto o Medicamento</button>
+    </div>
+    <div class="col-md-6 text-end">
+        <form asp-action="Index" method="get" class="form-inline">
+        <input type="hidden" name="searchInventory" value="@ViewData["searchInventory"]" />
+
+        <label class="toggle-label" for="statusFilterInventory">Mostrar:</label>
+        <select id="statusFilterInventory" name="statusFilterInventory" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+            <option value="active" selected="@(ViewData["statusFilterInventory"]?.ToString() == "active" ? "selected" : null)">Activos</option>
+            <option value="inactive" selected="@(ViewData["statusFilterInventory"]?.ToString() == "inactive" ? "selected" : null)">Inactivos</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+
+<br />
+
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().inventoryId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().category)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().brand)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().availableStock)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().description)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().price)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().provider)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().providerInfo)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().State)</th>
+            <th class="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.inventoryId)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.category)</td>
+                <td>@Html.DisplayFor(modelItem => item.brand)</td>
+                <td>@Html.DisplayFor(modelItem => item.availableStock)</td>
+                <td>@Html.DisplayFor(modelItem => item.description)</td>
+                <td>@Html.DisplayFor(modelItem => item.price)</td>
+                <td>@Html.DisplayFor(modelItem => item.provider)</td>
+                <td>@Html.DisplayFor(modelItem => item.providerInfo)</td>
+                <td>@Html.DisplayFor(modelItem => item.State)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.inventoryId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.inventoryId" class="btn btn-secondary btn-sm">Detalles</a>
+                    @if ((string)ViewData["statusFilterInventory"] == "active")
+                    {
+                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.State" asp-action="Delete" asp-route-id="@item.inventoryId">Eliminar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if ((bool)ViewBag.NoResultados)
+{
+    <p class>No se encuentran resultados de búsqueda.</p>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="AddInventory" tabindex="-1" aria-labelledby="addInventoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addInventoryLabel">Añadir Producto o Medicamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" method="post">
+                    <div validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label for="name" class="control-label">Nombre</label>
+                        <input name="name" class="form-control" required />
+                        <span validation-for="name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category" class="control-label">Categoría</label>
+                        <select name="category" class="form-control" required>
+                            <option value="" disabled selected>Seleccione una categoría</option>
+                            <option value="Producto">Producto</option>
+                            <option value="Medicamento">Medicamento</option>
+                        </select>
+                        <span validation-for="category" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brand" class="control-label">Marca</label>
+                        <input name="brand" class="form-control" required />
+                        <span validation-for="brand" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="availableStock" class="control-label">Stock Disponible</label>
+                        <input name="availableStock" class="form-control" required />
+                        <span validation-for="availableStock" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="control-label">Descripción</label>
+                        <input name="description" class="form-control" required />
+                        <span validation-for="description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price" class="control-label">Precio</label>
+                        <input name="price" class="form-control" required />
+                        <span validation-for="price" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="provider" class="control-label">Proveedor</label>
+                        <input name="provider" class="form-control" required />
+                        <span validation-for="provider" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="providerInfo" class="control-label">Información del Proveedor</label>
+                        <input name="providerInfo" class="form-control" required />
+                        <span validation-for="providerInfo" class="text-danger"></span>
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <input type="submit" value="Crear" class="btn colorButton" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

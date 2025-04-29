@@ -1,0 +1,52 @@
+﻿@model HealthyPawsV2.DAL.Contact
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Crear Contacto</h1>
+
+
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="ejemplo@mail.com" data-val="true"
+                       data-val-email="Ingrese un correo electrónico válido." />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" type="text"
+                       placeholder="8888-8888" pattern="\d{8}"
+                       maxlength="8"
+                       data-val="true"
+                       data-val-regex="El número de teléfono debe contener exactamente 8 dígitos." />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="WhatsApp" class="form-check-input" type="checkbox" />
+                    <label asp-for="WhatsApp" class="form-check-label"></label>
+                </div>
+                <span asp-validation-for="WhatsApp" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card-footer">
+    <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+</div>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.Address>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.province)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.canton)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.district)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.province)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.canton)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.district)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AddressId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AddressId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AddressId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

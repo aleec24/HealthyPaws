@@ -1,0 +1,44 @@
+﻿@model HealthyPawsV2.DAL.PetBreed
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Detalles de la Raza de Mascota</h1>
+    </div>
+
+    <div class="card-body">
+        <h4>Información de la Raza</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.name)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.status)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.petTypeId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.PetType.name)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model?.petBreedId" class="btn colorButton">Editar</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

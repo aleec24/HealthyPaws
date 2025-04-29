@@ -1,0 +1,285 @@
+﻿@using HealthyPawsV2.Utils
+@model HealthyPawsV2.DAL.ApplicationUser
+
+
+
+@{
+	ViewData["Title"] = "Crear";
+}
+
+<h1>Crear</h1>
+
+<h4>Usuario</h4>
+<hr />
+
+<div class="card">
+	<div class="card-body">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="form-group">
+				<label asp-for="idType" class="control-label"></label>
+				<select asp-for="idType" class="form-control">
+					<option value=""></option>
+					<option value="Nacional">Nacional</option>
+					<option value="Extranjero">Extranjero</option>
+					<option value="Nacionalizado">Nacionalizado</option>
+				</select>
+				<span asp-validation-for="idType" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="idNumber" class="control-label"></label>
+				<input asp-for="idNumber" class="form-control" id="idNumber" />
+				<span asp-validation-for="idNumber" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="name" class="control-label"></label>
+				<input asp-for="name" class="form-control" id="name" />
+				<span asp-validation-for="name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="surnames" class="control-label"></label>
+				<input asp-for="surnames" class="form-control" id="surnames" />
+				<span asp-validation-for="surnames" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="phone1" class="control-label"></label>
+				<input asp-for="phone1" class="form-control" />
+				<span asp-validation-for="phone1" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="phone2" class="control-label"></label>
+				<input asp-for="phone2" class="form-control" />
+				<span asp-validation-for="phone2" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="phone3" class="control-label"></label>
+				<input asp-for="phone3" class="form-control" />
+				<span asp-validation-for="phone3" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Email" class="control-label"></label>
+				<input asp-for="Email" id="emailInput" class="form-control" required onblur="validarCorreo()" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="province">Provincia</label>
+				<select id="province" class="form-control" asp-for="province" required>
+					<option value="">Seleccione una provincia</option>
+				</select>
+				@* <span id="province-error" class="text-danger" style="display:none;"></span>  *@
+				<span asp-validation-for="province" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="canton">Cantón</label>
+				<select id="canton" class="form-control" asp-for="canton" disabled required/>
+					<option value="">Seleccione un cantón</option>
+				</select>
+				@* <span id="canton-error" class="text-danger" style="display:none;"></span>  *@
+				<span asp-validation-for="canton" class="text-danger"></span>
+			</div>
+
+
+			<div class="form-group">
+				<label for="district">Distrito</label>
+				<select id="district" class="form-control" asp-for="district" disabled required>
+					<option value="">Seleccione un distrito</option>
+				</select>
+				@* <span id="district-error" class="text-danger" style="display:none;"></span> *@
+				<span asp-validation-for="district" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<input type="hidden" name="provinceName" id="provinceName" value="" />
+				<input type="hidden" name="cantonName" id="cantonName" value="" />
+				<input type="hidden" name="districtName" id="districtName" value="" />
+			</div>
+
+			<div class="form-group">
+				@*Use method of file RolesUtils to render a role dropdown ONLY for users with "Admin" role*@
+				@if (RolesUtils.LoggedUserRole(User, "Admin"))
+				{
+					<label class="control-label">Role</label>
+					<select name="role" class="form-control">
+						<option value="">Seleccione el rol</option>
+						@foreach (var role in ViewBag.Roles)
+						{
+							<option value="@role">@role</option>
+						}
+					</select>
+				}
+			</div>
+			<br />
+			<div class="form-group">
+				<input type="submit" value="Crear" class="btn colorButton" />
+			</div>
+
+		</form>
+	</div>
+	<div class="card-footer">
+		<a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+	</div>
+</div>
+
+
+@* This is an script that helps finding the Name and surnames of the person who is being registered to the system, it calls an API Web *@
+@* This Script reads the amount of caracters in the idNumber field and validate if they are 9 to get the National IDs *@
+@section Scripts {
+	
+
+
+
+
+	<script>
+
+		document.getElementById('idNumber').addEventListener('input', function () {
+			var cedula = document.getElementById('idNumber').value;
+			if (cedula.length === 9 && document.getElementById('idType').value === "Nacional") {
+				fetch(`/api/cedulas/${cedula}`)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error(`HTTP error! status: ${response.status}`);
+						}
+						return response.json();
+					})
+					.then(data => {
+						if (data && data.nombre && data.apellidos) {
+							document.getElementById('name').value = data.nombre || '';
+							document.getElementById('surnames').value = data.apellidos || '';
+						} else {
+							alert("No se encontró información para esta cédula.");
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert(`Ocurrió un error al realizar la validación: ${error.message}`);
+					});
+			} else {
+				document.getElementById('name').value = '';
+				document.getElementById('surnames').value = '';
+			}
+		});
+
+		document.getElementById('idType').addEventListener('change', function () {
+			var idType = this.value;
+			if (idType === "Nacional") {
+				document.getElementById('name').readOnly = true;
+				document.getElementById('surnames').readOnly = true;
+			} else {
+				document.getElementById('name').readOnly = false;
+				document.getElementById('surnames').readOnly = false;
+			}
+		});
+
+		//These are the Functions to get the data from the APIs
+		//These are avariables to get the name of the addresses
+		let selectedProvinceName = '';
+		let selectedCantonName = '';
+		let selectedDistrictName = '';
+
+
+				// Esto es para prueba de address
+		fetch('/api/ubicaciones/provincias')
+			.then(response => response.json())
+			.then(data => {
+				const provinceSelect = document.getElementById('province');
+				for (const [id, name] of Object.entries(data)) {
+					const option = document.createElement('option');
+					option.value = id;
+					option.textContent = name;
+					provinceSelect.appendChild(option);
+				}
+			});
+
+		// We load the Provinces here
+		document.getElementById('province').addEventListener('change', function () {
+			const provinceId = this.value;
+
+			// Verificamos si se ha seleccionado una provincia
+			if (!provinceId) {
+				alert('La provincia es obligatoria. Por favor seleccione una provincia.');
+				return;  // Salimos de la función si no se seleccionó una provincia
+			}
+
+			const selectedOption = this.options[this.selectedIndex];
+			selectedProvinceName = selectedOption.textContent;
+
+			document.getElementById('provinceName').value = selectedProvinceName;
+
+			// Si se seleccionó una provincia, realizamos la petición fetch
+			fetch(`/api/ubicaciones/provincias/${provinceId}/cantones`)
+				.then(response => response.json())
+				.then(data => {
+					const cantonSelect = document.getElementById('canton');
+					cantonSelect.innerHTML = '<option value="">Seleccione un cantón</option>';
+					for (const [id, name] of Object.entries(data)) {
+						const option = document.createElement('option');
+						option.value = id;
+						option.textContent = name;
+						cantonSelect.appendChild(option);
+					}
+					cantonSelect.disabled = false;
+					document.getElementById('district').innerHTML = '<option value="">Seleccione un distrito</option>';
+					document.getElementById('district').disabled = true;
+				});
+		});
+
+				// We load the canton details here
+		document.getElementById('canton').addEventListener('change', function () {
+			const provinceId = document.getElementById('province').value;
+			const cantonId = this.value;
+
+			// Verificamos si se ha seleccionado un cantón
+			if (!cantonId) {
+				alert('El cantón es obligatorio. Por favor seleccione un cantón.');
+				return;  // Salimos de la función si no se seleccionó un cantón
+			}
+
+			const selectedOption = this.options[this.selectedIndex];
+			selectedCantonName = selectedOption.textContent;
+
+			document.getElementById('cantonName').value = selectedCantonName;
+
+			// Si se seleccionó un cantón, realizamos la petición fetch
+			fetch(`/api/ubicaciones/provincias/${provinceId}/canton/${cantonId}/distritos`)
+				.then(response => response.json())
+				.then(data => {
+					const districtSelect = document.getElementById('district');
+					districtSelect.innerHTML = '<option value="">Seleccione un distrito</option>';
+					for (const [id, name] of Object.entries(data)) {
+						const option = document.createElement('option');
+						option.value = id;
+						option.textContent = name;
+						districtSelect.appendChild(option);
+					}
+					districtSelect.disabled = false;
+				});
+		});
+
+		document.getElementById('district').addEventListener('change', function () {
+			const selectedOption = this.options[this.selectedIndex];
+			selectedDistrictName = selectedOption.textContent;
+
+			document.getElementById('districtName').value = selectedDistrictName;
+		});
+
+
+
+
+
+
+
+	</script>
+}
+
+
+
+
+@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+

@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var Appointments = ViewBag.Appointment as IEnumerable<Appointment>;
+    var Inventaries = ViewBag.Inventory as IEnumerable<Inventory>;
+}
+
+<style>
+    .toast-body {
+    background-color: #ffffff !important; /* Fondo blanco */
+    color: #000000 !important; /* Texto negro */
+    font-size:15px;
+    }
+
+    .background-style{
+    width: 50%;
+    height: 50%; /* Ajuste del alto por el contenido */
+    background-color: #f8f9fa; /* Color de fondo */
+    border: 2px solid #698457; /* Borde para el "encuadro" */
+    border-radius: 50px; /* Bordes redondeados */
+    padding: 15px; /* Espaciado interno */
+    margin: 20px auto; /* Centrado */
+
+    }
+
+    .toast {
+    border-radius: 50px; 
+    align-content:center;
+    text-align:center;
+    margin: 20px auto;
+    }
+
+    .toast-header {
+    background-color: #698457;
+    color: white;
+    }
+</style>
+
+
+<h1 style="text-align: center;">Notificaciones </h1>
+
+<div class="background-style">
+
+    @foreach (var item in Appointments)
+    {
+        @if (item.Date >= DateTime.Now)
+        {
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="fa-solid fa-circle-exclamation" style="color:white; font-size:25px; padding-right: 7px"></i>
+                    <strong class="me-auto" style="color:white; font-size:22px">Cita Pronto a Suceder</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" style="font-size:18px">
+                    La Cita con el ID: <strong>@item.AppointmentId</strong> es el día <strong>@item.Date</strong>
+                </div>
+            </div>
+        }
+    }
+
+    @foreach (var item in Inventaries)
+    {
+        @if (item.availableStock < 5)
+        {
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="fa-solid fa-circle-exclamation" style="color:white; font-size:25px; padding-right: 7px"></i>
+                    <strong class="me-auto" style="color:white; font-size:22px">Falta de Inventario</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" style="font-size:18px">
+                    Queda menos de 5 unidades del Producto <strong>@item.name</strong>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toastElements = document.querySelectorAll('.toast');
+    toastElements.forEach(toastElement => {
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: false
+        });
+        toast.show();
+    });
+});
+</script>

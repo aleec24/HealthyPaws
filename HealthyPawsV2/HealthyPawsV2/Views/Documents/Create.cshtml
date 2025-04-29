@@ -1,0 +1,73 @@
+﻿@model HealthyPawsV2.DAL.Document
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Crear</h1>
+
+<h4>Documento</h4>
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="AppointmentId" class="control-label"></label>
+                <select asp-for="AppointmentId" class="form-control" asp-items="ViewBag.AppointmentId"></select>
+                <span asp-validation-for="AppointmentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="petFileId" class="control-label"></label>
+                <select asp-for="petFileId" class="form-control" asp-items="ViewBag.petFileId"></select>
+                <span asp-validation-for="petFileId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="category" class="control-label"></label>
+                <input asp-for="category" class="form-control" />
+                <span asp-validation-for="category" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="fileType" class="control-label"></label>
+                @* <input type="file" name="File"  class="form-control" accept=".png, .jpg, .jpeg  .pdf .docx .doc"/> *@
+                <input type="file" name="File" class="form-control" accept="image/png, image/jpeg, application/pdf, 
+                                application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, 
+                                application/vnd.ms-excel, application/vnd.ms-excel.sheet.macroEnabled.12, application/vnd.ms-excel.binary.sheet" />
+                <span asp-validation-for="fileType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="status" />
+                <label class="form-check-label" asp-for="status">@Html.DisplayNameFor(model => model.status)</label>
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

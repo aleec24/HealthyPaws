@@ -1,0 +1,289 @@
+﻿@model HealthyPawsV2.DAL.Appointment
+
+@{
+    ViewData["Title"] = "Editar Cita";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Editar Cita</h1>
+    </div>
+
+    <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AppointmentId" />
+
+            <div class="form-group">
+                <label asp-for="AppointmentId" class="control-label"></label>
+                <input asp-for="AppointmentId" class="form-control" readonly />
+                <span asp-validation-for="AppointmentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="petFileId" class="control-label"></label>
+                <input asp-for="petFileId" class="form-control" readonly />
+                <span asp-validation-for="petFileId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ownerId" class="control-label"></label>
+                <select asp-for="ownerId" class="form-control" asp-items="ViewBag.Users"></select>
+                <span asp-validation-for="ownerId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="vetId" class="control-label"></label>
+                <select asp-for="vetId" class="form-control" asp-items="ViewBag.Vets">
+                    <option value="" disabled selected>Seleccione el Veterinario</option>
+                </select>
+                <span asp-validation-for="vetId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" id="fechaCita"/>
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="diagnostic" class="control-label"></label>
+                <input asp-for="diagnostic" class="form-control" />
+                <span asp-validation-for="diagnostic" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Additional" class="control-label"></label>
+                <textarea asp-for="Additional" class="form-control"></textarea>
+                <span asp-validation-for="Additional" class="text-danger"></span>
+            </div>
+            @* Esto es de prueba *@
+            <div class="form-group">
+                <label asp-for="status" class="control-label"></label>
+                <input asp-for="status" class="form-control" readonly />
+            </div>
+
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn colorButton" />
+                <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AñadirMedCita">Añadir Medicamentos a la Cita</button>
+                <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExamen">Añadir Exámenes a la Cita</button>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+<!-- MODAL Medicamento-->
+<div class="modal fade" id="AñadirMedCita" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Inventario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" asp-controller="Appointments" asp-action="CreateMed">
+                            <div class="text-danger" validation-summary="ModelOnly"></div>
+
+                            <!-- Campo oculto para el número de cita -->
+                            <div class="form-group">
+                                <label for="appointmentId" class="control-label">Numéro de Cita</label>
+                                <input id="appointmentId" name="appointmentId" class="form-control" value="@Model.AppointmentId" readonly />
+                                <span validation-for="appointmentId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inventoryID" class="control-label">Medicamento</label>
+                                <select id="inventoryID" name="inventoryID" class="form-control">
+                                    <option value="">Seleccione un medicamento</option>
+                                    @foreach (var medicamento in ViewData["Medicamentos"] as IEnumerable<SelectListItem>)
+                                    {
+                                        <option value="@medicamento.Value">@medicamento.Text</option>
+                                    }
+                                </select>
+                                <span validation-for="inventoryID" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dose" class="control-label">Dosis</label>
+                                <input id="dose" name="dose" class="form-control" />
+                                <span validation-for="dose" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="measuredose" class="control-label">Medida</label>
+                                <select id="measuredose" name="measuredose" class="form-control">
+                                    <option value="mg">mg</option>
+                                    <option value="ml">ml</option>
+                                    <option value="gr">gr</option>
+                                    <option value="oz">oz</option>
+                                </select>
+                                <span validation-for="measuredose" class="text-danger"></span>
+                            </div>
+
+                            <br />
+                            <div class="form-group">
+                                <input class="btn colorButton CrearMedicamentoBtn"  type="submit" value="Crear" />
+                                @* <input type="submit" class="btn btn-primary" id="" value="Crear"/> *@
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--Modal to add new Examens-->
+<div class="modal fade" id="AbrirExamen" tabindex="-1" aria-labelledby="AbrirExpedienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AbrirExpedienteLabel">Crear Expediente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="expedienteForm" enctype="multipart/form-data" asp-controller="Appointments" asp-action="CreateDoc">
+
+                            <input type="hidden" name="AppointmentId" value="@Model.AppointmentId" />
+                            <div class="form-group">
+                                <label for="appointmentId" class="control-label">Seleccione la cita</label>
+                                <input name="appointmentId" id="appointmentId" class="form-control" value="@Model.AppointmentId" readonly/>
+                                <span class="text-danger" id="appointmentIdError"></span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="petFileId" class="control-label">Seleccione el expediente de la mascota</label>
+                                <input name="petFileId" id="petFileId" class="form-control" value="@Model.petFileId" readonly />                                   
+                                <span class="text-danger" id="petFileIdError"></span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="name">Nombre</label>
+                                <input type="text" id="name" name="name" class="form-control" />
+                                <span class="text-danger" id="nameError"></span>
+                            </div>
+
+
+@*                             <div class="form-group">
+                                <label for="category">Categoría</label>
+                                <input type="text" id="category" name="category" class="form-control" />
+                                <span class="text-danger" id="categoryError"></span>
+                            </div>
+ *@
+                            <div class="form-group">
+                                <label for="category">Categoría</label>
+                                <select id="category" name="category" class="form-control">
+                                    <option value="">Selecciona una categoría</option>
+                                    <option value="Rayos X">Rayos X</option>
+                                    <option value="Vacunación">Vacunación</option>
+                                    <option value="Examen de Sangre">Examen de Sangre</option>
+                                    <option value="Cirugía">Cirugía</option>
+                                    <option value="Esterilización">Esterilización</option>
+                                    <option value="Consultas Veterinarias">Consultas Veterinarias</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                                <span class="text-danger" id="categoryError"></span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="fileType">Seleccionar archivo</label>
+                                <input type="file" id="fileType" name="File" class="form-control" accept="image/png, image/jpeg, application/pdf,
+                                    application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    application/vnd.ms-excel" />
+                                <span class="text-danger" id="fileTypeError"></span>
+                            </div>
+
+
+                         
+                            <div class="form-group mt-3">
+                                <input class="btn colorButton CrearExamenBtn" type="submit" value="Crear" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+        document.getElementById("fechaCita").addEventListener("change", async function() {
+        let fecha = new Date(this.value);
+
+        // Validación 1: No se pueden agendar citas los días domingo
+        if (fecha.getDay() === 0) {
+            alert("No se pueden agendar citas los días domingo.");
+            this.value = "";
+            return;
+        }
+
+        // Validación 2: No se permiten citas antes de las 7 am o después de las 6 pm, de lunes a sábado
+        let hora = fecha.getHours();
+        if (hora < 7 || hora > 18) {
+            alert("Las citas deben ser entre las 7:00 AM y las 6:00 PM.");
+            this.value = "";
+            return;
+        }
+
+        // Validación 3: La fecha no puede ser en el pasado
+        let fechaActual = new Date();
+        if (fecha < fechaActual) {
+            alert("La fecha de la cita no puede ser anterior a la fecha actual.");
+            this.value = "";
+            return;
+        }
+
+        
+    });
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+﻿@model HealthyPawsV2.DAL.Address
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Address</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.province)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.province)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.canton)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.canton)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.district)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.district)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.AddressId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

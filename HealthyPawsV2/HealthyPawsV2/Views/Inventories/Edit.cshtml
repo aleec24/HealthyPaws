@@ -1,0 +1,100 @@
+﻿@model HealthyPawsV2.DAL.Inventory
+
+@{
+    ViewData["Title"] = "Editar Inventario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Editar Inventario</h1>
+    </div>
+
+    <div class="card-body">
+        
+        <hr />
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="inventoryId" />
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+
+            @* <div class="form-group">
+                <label asp-for="category" class="control-label"></label>
+                <input asp-for="category" class="form-control" />
+                <span asp-validation-for="category" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-group">
+                <label asp-for="category" class="control-label"></label>
+                <select asp-for="category" class="form-control">
+                    <option value="Medicamento">Medicamento</option>
+                    <option value="Producto">Producto</option>
+                </select>
+                <span asp-validation-for="category" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="brand" class="control-label"></label>
+                <input asp-for="brand" class="form-control" />
+                <span asp-validation-for="brand" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="availableStock" class="control-label"></label>
+                <input asp-for="availableStock" class="form-control" />
+                <span asp-validation-for="availableStock" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="price" class="control-label"></label>
+                <input asp-for="price" class="form-control" />
+                <span asp-validation-for="price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="provider" class="control-label"></label>
+                <input asp-for="provider" class="form-control" />
+                <span asp-validation-for="provider" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="providerInfo" class="control-label"></label>
+                <input asp-for="providerInfo" class="form-control" />
+                <span asp-validation-for="providerInfo" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="State" />
+            @if (!Model.State)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="reactiveInventory" name="reactiveInventory" value="true" />
+                    <label class="form-check-label" for="reactiveInventory">Reactivar Artículo</label>
+                </div>
+            }
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

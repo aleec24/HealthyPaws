@@ -1,0 +1,60 @@
+﻿@model HealthyPawsV2.DAL.AppointmentInventory
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Detalles del Inventario de la Cita</h1>
+    </div>
+
+    <div class="card-body">
+        <h4>Información del Inventario de la Cita</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.dose)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.dose)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.measuredose)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.measuredose)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.inventoryID)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Inventory.brand)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.appointmentId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Appointment.AppointmentId)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.status)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card-footer">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.appointmentInventoryId" class="btn colorButton">Editar</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>

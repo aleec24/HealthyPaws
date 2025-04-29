@@ -1,0 +1,302 @@
+﻿@{
+    var petTypes = ViewBag.PetTypes as IEnumerable<HealthyPawsV2.DAL.PetType>;
+    var users = ViewBag.Users as IEnumerable<ApplicationUser>;
+    var PetBreeds = ViewBag.PetBreeds as IEnumerable<PetBreed>;
+    var Appointments = ViewBag.Appointment as IEnumerable<Appointment>;
+    var PetFiles = ViewBag.PetFiles as IEnumerable<HealthyPawsV2.DAL.PetFile>;
+    var Documents = ViewBag.Documents as IEnumerable<HealthyPawsV2.DAL.Document>;
+}
+
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto; font-size:23px; padding-bottom:20px; color: rgba(178,90,40,0.8);">
+        <strong>¡Búsqueda General! </strong> <br /> Encuentra información de cualquier apartado.
+    </div>
+</div>
+
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-controller="Home" asp-action="Search" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="GlobalSearch" name="GlobalSearch" class="form-control rounded-input" placeholder="Buscar..." />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@* This is the Filter for Types *@
+@if (ViewBag.NoResultadosPetTypes)
+{
+    
+}
+else
+{
+    <h4>Tipos de Mascotas</h4>
+    <table class="table table-bordered">
+        <thead class="color">
+            <tr>
+                <th class="text-white">Id</th>
+                <th class="text-white">Nombre</th>
+                <th class="text-white">Estado</th>
+                @* <th class="text-white">Acciones</th> *@
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in petTypes)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.petTypeId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.status)</td>
+                    @* <td>
+            <a asp-action="Edit" asp-controller=PetTypes asp-route-id="@item.petTypeId" class="btn btn-primary btn-sm">Editar</a>
+            <a asp-action="Details" asp-route-id="@item.petTypeId" class="btn btn-secondary btn-sm">Detalles</a>
+            <a class="btn btn-danger BorrarElemento" asp-action="Delete" asp-route-id="@item.petTypeId">Eliminar</a>
+            </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@* Tis is the Filter for Users *@
+@if (ViewBag.NoResultadosUsers)
+{
+    
+}
+else
+{
+    <h4>Usuarios</h4>
+    <table class="table table-bordered">
+        <thead class="color">
+            <tr>
+                <th class="text-white">Nombre</th>
+                <th class="text-white">Apellidos</th>
+                <th class="text-white">Correo</th>
+                <th class="text-white">Tipo de Cédula</th>
+                <th class="text-white">Numero de Cédula</th>
+                <th class="text-white">Telefono</th>
+                @* <th class="text-white">Acciones</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => user.name)</td>
+                    <td>@Html.DisplayFor(modelItem => user.surnames)</td>
+                    <td>@Html.DisplayFor(modelItem => user.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => user.idType)</td>
+                    <td>@Html.DisplayFor(modelItem => user.idNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => user.phone1)</td>
+                    @* <td>
+            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary btn-sm">Editar</a>
+            <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-secondary btn-sm">Detalles</a>
+            <a class="btn btn-danger BorrarElemento" asp-action="Delete" asp-route-id="@user.Id">Eliminar</a>
+            </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@* This is the Filter for Breeds *@
+@if (ViewBag.NoResultadosPetBreeds)
+{
+    
+}
+else
+{
+    <h4>Razas</h4>
+    <table class="table table-bordered">
+        <thead class="color">
+            <tr>
+                <th class="text-white">Nombre</th>
+                <th class="text-white">Tipo</th>
+                @* <th class="text-white">Acciones</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item3 in PetBreeds)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item3.name)</td>
+                    <td>@Html.DisplayFor(modelItem => item3.PetType.name)</td>
+                    @* <td>
+            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary btn-sm">Editar</a>
+            <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-secondary btn-sm">Detalles</a>
+            <a class="btn btn-danger BorrarElemento" asp-action="Delete" asp-route-id="@user.Id">Eliminar</a>
+            </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@* This is the Filter for Appointment *@
+
+@if (ViewBag.NoResultadosAppointment)
+{
+    
+}
+else
+{
+
+    <h4>Citas</h4>
+    <br />
+    <table class="table table-bordered">
+        <thead class="color">
+            <tr>
+                <th class="text-white">Id</th>
+                <th class="text-white">Nombre de Mascota</th>
+                <th class="text-white">Nombre de Dueño</th>
+                <th class="text-white">Nombre de Veterinario</th>
+                <th class="text-white">Fecha</th>
+                <th class="text-white">Descripción</th>
+                <th class="text-white">Estado</th>
+                <th class="text-white">Diagnostico</th>
+                <th class="text-white">Adicional</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appointment in Appointments)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => appointment.AppointmentId)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.PetFile.name)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.owner.name)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.vet.name)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.Date)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.description)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.status)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.diagnostic)</td>
+                    <td>@Html.DisplayFor(modelItem => appointment.Additional)</td>
+                    @* <td>
+            <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" style="margin-bottom: 3%">Editar</a>
+            <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm" style="margin-bottom: 3%">Detalles</a>
+            <a class="btn btn-danger btn-sm" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+            </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@* This is the Filter for PetFiles *@
+
+@if (ViewBag.NoResultadosAppointment)
+{
+    
+}
+else
+{
+    <h4>Expendientes</h4>
+    <br />
+    <table class="table table-bordered">
+        <thead class="color">
+            <tr>
+                <th class="text-white">Id</th>
+                <th class="text-white">Raza de la mascota</th>
+                <th class="text-white">Nombre de Dueño</th>
+                <th class="text-white">Nombre de Mascota</th>
+                <th class="text-white">Tipo de Mascota</th>
+                <th class="text-white">Género</th>
+                <th class="text-white">Edad</th>
+                <th class="text-white">Peso</th>
+                <th class="text-white">Fecha de Creación</th>
+                <th class="text-white">Castrado</th>
+                <th class="text-white">Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var petfile in PetFiles)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => petfile.petFileId)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.PetBreed.name)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.Owner.name)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.name)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.petTypeId)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.gender)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.age)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.weight)<span> KG</span></td>
+                    <td>@Html.DisplayFor(modelItem => petfile.creationDate)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.castration)</td>
+                    <td>@Html.DisplayFor(modelItem => petfile.description)</td>
+                    @* <td>
+                    <a asp-action="Edit" asp-route-id="@item.AppointmentId" class="btn btn-primary btn-sm" style="margin-bottom: 3%">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.AppointmentId" class="btn btn-secondary btn-sm" style="margin-bottom: 3%">Detalles</a>
+                    <a class="btn btn-danger btn-sm" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.AppointmentId">Eliminar</a>
+                    </td> *@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@* This is the Filter for Documents *@
+
+@if (ViewBag.NoResultadosDocuments)
+{
+    
+}
+else
+{
+    <h4>Exámenes</h4>
+    <br />
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class="text-white">Nombre del Documento/Examen</th>
+            <th class="text-white">Categoria</th>
+            <th class="text-white">Tipo de Archivo</th>
+            <th class="text-white">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var document in Documents)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => document.name)</td>
+                <td>@Html.DisplayFor(modelItem => document.category)</td>
+                <td>@Html.DisplayFor(modelItem => document.fileType)</td>
+                <td>@Html.DisplayFor(modelItem => document.status)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+<!--This is afunction to read the diferent bytes for the files we are accepting into the system-->
+@functions {
+    private string GetFileTypeMagicNumber(byte[] fileBytes)
+    {
+        if (fileBytes.Length > 4)
+        {
+
+            if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8)
+                return "image";
+            if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 && fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
+                return "image";
+
+
+            if (fileBytes[0] == 0x25 && fileBytes[1] == 0x50 && fileBytes[2] == 0x44 && fileBytes[3] == 0x46)
+                return "pdf";
+
+
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "word";
+
+
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "excel";
+
+
+        }
+
+        return "unknown";
+    }
+}

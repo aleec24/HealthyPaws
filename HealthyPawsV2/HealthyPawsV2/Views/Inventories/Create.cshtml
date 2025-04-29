@@ -1,0 +1,86 @@
+﻿@model HealthyPawsV2.DAL.Inventory
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Crear</h1>
+
+<h4>Inventario</h4>
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="category" class="control-label"></label>
+                <select asp-for="category" class="form-control">
+                    <option value="Producto">Producto</option>
+                    <option value="Medicamento">Medicamento</option>
+                </select>
+                <span asp-validation-for="category" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="brand" class="control-label"></label>
+                <input asp-for="brand" class="form-control" />
+                <span asp-validation-for="brand" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="availableStock" class="control-label"></label>
+                <input asp-for="availableStock" class="form-control" />
+                <span asp-validation-for="availableStock" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="price" class="control-label"></label>
+                <input asp-for="price" class="form-control" />
+                <span asp-validation-for="price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="provider" class="control-label"></label>
+                <input asp-for="provider" class="form-control" />
+                <span asp-validation-for="provider" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="providerInfo" class="control-label"></label>
+                <input asp-for="providerInfo" class="form-control" />
+                <span asp-validation-for="providerInfo" class="text-danger"></span>
+            </div>
+            <br />
+            
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+    
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,296 @@
+﻿
+@model IEnumerable<HealthyPawsV2.DAL.Document>
+
+@{
+    ViewData["Title"] = "Módulo de Exámenes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--This is afunction to read the diferent bytes for the files we are accepting into the system-->
+@functions {
+    private string GetFileTypeMagicNumber(byte[] fileBytes)
+    {
+        if (fileBytes.Length > 4)
+        {
+
+            if (fileBytes[0] == 0xFF && fileBytes[1] == 0xD8)
+                return "image";
+            if (fileBytes[0] == 0x89 && fileBytes[1] == 0x50 && fileBytes[2] == 0x4E && fileBytes[3] == 0x47)
+                return "image";
+
+
+            if (fileBytes[0] == 0x25 && fileBytes[1] == 0x50 && fileBytes[2] == 0x44 && fileBytes[3] == 0x46)
+                return "pdf";
+
+
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "word";
+
+
+            if (fileBytes[0] == 0x50 && fileBytes[1] == 0x4B && fileBytes[2] == 0x03 && fileBytes[3] == 0x04)
+                return "excel";
+
+
+        }
+
+        return "unknown";
+    }
+}
+
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .file-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+    }
+</style>
+<!--This is a Searh Bar to Look for the names of the Pets in case we want to find any specific of them-->
+<div class="row" style="text-align: center;">
+    <div class="col-md-6" style="margin: 0 auto;">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <input type="text" id="documentSearch" name="documentSearch" class="form-control rounded-input" placeholder="Buscar por nombre de Documento..." />
+            </div>
+            <br/>
+            <label class="toggle-label" for="fileTypeFilter">Mostrar:</label>
+            <select id="fileTypeFilter" name="fileTypeFilter" asp-for="@ViewData["FileTypeFilter"]" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+                <option value="">Todos los formatos</option>
+                <option value="image">Imágenes</option>
+                <option value="pdf">PDFs</option>
+                <option value="word">Documentos Word</option>
+            </select>
+            <select id="statusFilterDoc" name="statusFilterDoc" class="form-select" onchange="this.form.submit()" style="display: inline-block; width: auto;">
+                <option value="active" selected="@(ViewData["statusFilterDoc"]?.ToString() == "active" ? "selected" : null)">Activos</option>
+                <option value="inactive" selected="@(ViewData["statusFilterDoc"]?.ToString() == "inactive" ? "selected" : null)">Inactivos</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+<!--This a normal Modulo/Table to visualize all the documents-->
+<!--This is the Button that we use to Create New Documents-->
+<div class="row ">
+    <div class="col-md-6">
+        @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+        {
+            <button type="button" class="btn colorButton" data-bs-toggle="modal" data-bs-target="#AbrirExamen">Añadir Examen</button>
+        }
+    </div>
+</div>
+
+<br />
+
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class="text-white">@Html.DisplayNameFor(model => model.AppointmentId)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.petFileId)</th>
+            <th class ="text-white" >@Html.DisplayNameFor(model => model.name)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.category)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.fileType)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.status)</th>
+            <th class="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.AppointmentId)</td>
+                <td>@Html.DisplayFor(modelItem => item.petFileId)</td>
+                <td>@Html.DisplayFor(modelItem => item.name)</td>
+                <td>@Html.DisplayFor(modelItem => item.category)</td>
+                <td>
+                    @if (item.fileType != null && item.fileType.Length > 0)
+                    {
+                        
+                        var fileTypeMagicNumber = GetFileTypeMagicNumber(item.fileType);
+
+                        if (fileTypeMagicNumber == "image")
+                        {
+                            
+                            <img class="file-icon" src="data:image;base64,@Convert.ToBase64String(item.fileType)" alt="@item.name"
+                                 data-bs-toggle="modal" data-bs-target="#imageModal" data-image="data:image;base64,@Convert.ToBase64String(item.fileType)" />
+                            
+                        }
+                        else if (fileTypeMagicNumber == "pdf")
+                        {
+                           
+
+                            <a href="data:application/pdf;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">
+                                <img src="/images/pdf.png" alt="PDF" class="file-icon" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "word")
+                        {
+                            <a href="data:application/msword;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">
+                                <img src="/images/doc.png" alt="PDF" class="file-icon" />
+                            </a>
+                        }
+                        else if (fileTypeMagicNumber == "excel")
+                        {
+                            <a href="data:application/vnd.ms-excel;base64,@Convert.ToBase64String(item.fileType)" download="@item.name">Descargar Excel</a>
+                        }
+                        else
+                        {
+                            <span>Archivo no soportado</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>No hay archivo</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.status)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.documentId" class="btn btn-secondary btn-sm">Detalles</a>
+                    @if ((string)ViewData["statusFilterDoc"] == "active")
+                    {
+                        <a class="btn btn-danger btn-sm BorrarElemento" data-estado="@item.status" asp-action="Delete" asp-route-id="@item.documentId">Eliminar</a>
+                    }
+                    @if (User.Identity.IsAuthenticated && (RolesUtils.LoggedUserRole(User, "Admin") || RolesUtils.LoggedUserRole(User, "Vet")))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.documentId" class="btn btn-primary btn-sm">Editar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Modal for the Images -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Imagen del Examen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" class="img-fluid" alt="Imagen del examen" />
+            </div>
+            <div class="modal-footer">
+                
+                <a id="downloadButton" class="btn colorButton" download="imagen-examen.jpg">Descargar Imagen</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal to add new Examens--> 
+<div class="modal fade" id="AbrirExamen" tabindex="-1" aria-labelledby="AbrirExpedienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AbrirExpedienteLabel">Crear Expediente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="expedienteForm" enctype="multipart/form-data" asp-controller="Documents" asp-action="Create">
+                            <div class="form-group">
+                                <label for="appointmentId" class="control-label">Seleccione la cita</label>
+                                <select name="appointmentId" id="appointmentId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione la cita</option>
+                                    @foreach (var appointment in ViewData["AppointmentId"] as SelectList)
+                                    {
+                                        <option value="@appointment.Value">@appointment.Text</option>
+                                    }
+                                </select>
+                                <span class="text-danger" id="appointmentIdError"></span>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label for="petFileId" class="control-label">Seleccione el expediente de la mascota</label>
+                                <select name="petFileId" id="petFileId" class="form-control" required>
+                                    <option value="" disabled selected>Seleccione el expediente</option>
+                                    @foreach (var pet in ViewData["petFileName"] as SelectList)
+                                    {
+                                        <option value="@pet.Value">@pet.Text</option>
+                                    }
+                                </select>
+                                <span class="text-danger" id="petFileIdError"></span>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label for="name">Nombre</label>
+                                <input type="text" id="name" name="name" class="form-control" />
+                                <span class="text-danger" id="nameError"></span>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <label for="category">Categoría</label>
+                                <select id="category" name="category" class="form-control">
+                                    <option value="">Selecciona una categoría</option>
+                                    <option value="Rayos X">Rayos X</option>
+                                    <option value="Vacunación">Vacunación</option>
+                                    <option value="Examen de Sangre">Examen de Sangre</option>
+                                    <option value="Cirugía">Cirugía</option>
+                                    <option value="Esterilización">Esterilización</option>
+                                    <option value="Consultas Veterinarias">Consultas Veterinarias</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                                <span class="text-danger" id="categoryError"></span>
+                            </div>
+
+                           
+                            <div class="form-group">
+                                <label for="fileType">Seleccionar archivo</label>
+                                <input type="file" id="fileType" name="File" class="form-control" accept="image/png, image/jpeg, application/pdf,
+                                    application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    application/vnd.ms-excel" />
+                                <span class="text-danger" id="fileTypeError"></span>
+                            </div>
+                            <div class="form-group mt-3">
+                                <button type="submit" class="btn  colorButton">Crear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- JavaScript para actualizar el modal con la imagen y habilitar la descarga -->
+<script>
+    var myModal = document.getElementById('imageModal')
+    myModal.addEventListener('show.bs.modal', function (event) {
+      
+        var triggerElement = event.relatedTarget;
+        
+        var imageSrc = triggerElement.getAttribute('data-image');
+
+        
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = imageSrc;
+
+        
+        var downloadButton = document.getElementById('downloadButton');
+        downloadButton.setAttribute('href', imageSrc);
+        downloadButton.setAttribute('download', 'imagen-examen.jpg');
+    });
+</script>
+
+
+

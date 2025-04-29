@@ -1,0 +1,94 @@
+﻿@model HealthyPawsV2.DAL.Document
+
+@{
+    ViewData["Title"] = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Editar</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Documento</h5>
+        <hr />
+
+        <form enctype="multipart/form-data" asp-controller="Documents" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="documentId" />
+
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.petFileId)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="petFileId" class="form-control" readonly />
+                    <span asp-validation-for="petFileId" class="text-danger"></span>
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.AppointmentId)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="AppointmentId" class="form-control" asp-items="ViewBag.AppointmentId" readonly />
+                </dd>
+
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.name)
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="name" class="form-control" />
+                    <span asp-validation-for="name" class="text-danger"></span>
+                </dd>
+
+              <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.category)
+                </dt>
+                <dd class="col-sm-9">
+                    <select asp-for="category" class="form-control">
+                        <option value=""></option>
+                        <option value="Rayos X">Rayos X</option>
+                        <option value="Vacunación">Vacunación</option>
+                        <option value="Examen de Sangre">Examen de Sangre</option>
+                        <option value="Cirugía">Cirugía</option>
+                        <option value="Esterilización">Esterilización</option>
+                        <option value="Consultas Veterinarias">Consultas Veterinarias</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <span asp-validation-for="category" class="text-danger"></span>
+                </dd> 
+
+                
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.fileType)
+                </dt>
+                <dd class="col-sm-9">
+                    <input type="file" id="fileType" name="File" class="form-control" accept="image/png, image/jpeg, application/pdf,
+                                    application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                    application/vnd.ms-excel" /> 
+                    <span asp-validation-for="fileType" class="text-danger"></span>
+                </dd>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        @if (Model.status)
+                        {
+                            <input class="form-check-input" asp-for="status" checked />
+                        }
+                        else
+                        {
+                            <input class="form-check-input" asp-for="status" />
+                            <input type="hidden" name="reactiveDocument" value="true" />
+                        }
+                        @Html.DisplayNameFor(model => model.status)
+                    </label>
+                </div>
+            </dl>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar" class="btn colorButton" />
+                <a asp-action="Index" class="btn btn-outline-secondary ml-2">Atrás</a>
+            </div>
+        </form>
+    </div>
+
+    
+

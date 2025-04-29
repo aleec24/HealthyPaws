@@ -1,0 +1,112 @@
+﻿@model HealthyPawsV2.DAL.PetFile
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Crear</h1>
+
+<h4>Archivo de Mascota</h4>
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" placeholder="Ej: Bolita"/>
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            
+            @* I Added this to upgrade the User's experience *@
+            <div class="form-group">
+                <label asp-for="ownerId" class="control-label"></label>
+                <select asp-for="ownerId" class="form-control" asp-items="ViewBag.Users">
+                    <option value="" disabled selected>Seleccione al Dueño</option>
+                </select>
+                <span asp-validation-for="ownerId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="petTypeId" class="control-label">Tipo de Mascota</label>
+                <select asp-for="petTypeId" class="form-control" asp-items="ViewBag.petTypeId">
+                    <option value="" disabled selected>Seleccione el Tipo de Mascota</option>
+                </select>
+                <span asp-validation-for="petTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="petBreedId" class="control-label"></label>
+                <select asp-for="petBreedId" class="form-control" asp-items="ViewBag.petBreedId">
+                    <option value="" disabled selected>Seleccione la Raza de la Mascota</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="gender" class="control-label"></label>
+                <select asp-for="gender" class="form-control">
+                    <option value="" disabled selected>Seleccione el Genero de la Mascota</option>
+                    <option value="Hembra">Hembra</option>
+                    <option value="Macho">Macho</option>
+                </select>
+                <span asp-validation-for="gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="age" class="control-label"></label>
+                <input asp-for="age" class="form-control" />
+                <span asp-validation-for="age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="weight" class="control-label"></label>
+                <input asp-for="weight" class="form-control" id="weightInput"  placeholder="KG" />
+                <span asp-validation-for="weight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="vaccineHistory" class="control-label"></label>
+                <input asp-for="vaccineHistory" class="form-control" />
+                <span asp-validation-for="vaccineHistory" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="castration" class="control-label"></label>
+                <select asp-for="castration" class="form-control">
+                    <option value="" disabled selected>Seleccione el tipo de Castración</option>
+                    <option value="No">No</option>
+                    <option value="Ovariohisterectomía">Ovariohisterectomía</option>
+                    <option value="Orquiectomía">Orquiectomía</option>
+                </select>
+                <span asp-validation-for="castration" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+    
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

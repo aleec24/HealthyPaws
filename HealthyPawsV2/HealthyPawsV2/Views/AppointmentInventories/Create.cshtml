@@ -1,0 +1,62 @@
+﻿@model HealthyPawsV2.DAL.AppointmentInventory
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Crear</h1>
+
+<h4>Inventario de Citas</h4>
+<hr />
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="appointmentId" class="control-label"></label>
+                <select asp-for="appointmentId" class="form-control" asp-items="ViewBag.appointmentId"></select>
+                <span asp-validation-for="appointmentId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="inventoryID" class="control-label"></label>
+                <select asp-for="inventoryID" class="form-control" asp-items="ViewBag.inventoryID"></select>
+                <span asp-validation-for="inventoryID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="dose" class="control-label"></label>
+                <input asp-for="dose" class="form-control" />
+                <span asp-validation-for="dose" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="measuredose" class="control-label"></label>
+                <select asp-for="measuredose" class="form-control">
+                    <option value="mg">mg</option>
+                    <option value="ml">ml</option>
+                    <option value="gr">gr</option>
+                    <option value="oz">oz</option>
+                </select>
+                <span asp-validation-for="measuredose" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+ 
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

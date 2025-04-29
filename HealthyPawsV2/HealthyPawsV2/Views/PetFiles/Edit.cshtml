@@ -1,0 +1,144 @@
+﻿@model HealthyPawsV2.DAL.PetFile
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Editar Archivo de Mascota</h1>
+    </div>
+
+    <div class="card-body">
+    
+        <hr />
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="petFileId" />
+
+            <div class="form-group">
+                <label asp-for="name" class="control-label"></label>
+                <input asp-for="name" class="form-control" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="petTypeId" class="control-label">Tipo de Mascota</label>
+                <select asp-for="petTypeId" id="petTypeId" class="form-control" asp-items="ViewBag.petTypeId"></select>
+                <span asp-validation-for="petTypeId" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="petBreedId" class="control-label">Raza de Mascota</label>
+                <select asp-for="petBreedId" id="petBreedId" class="form-control" asp-items="ViewBag.petBreedId"></select>
+                <span asp-validation-for="petBreedId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="gender" class="control-label"></label>
+                <select asp-for="gender" class="form-control">
+                    <option value="" disabled selected>Seleccione el Genero de la Mascota</option>
+                    <option value="Hembra">Hembra</option>
+                    <option value="Macho">Macho</option>
+                </select>
+                <span asp-validation-for="gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="age" class="control-label"></label>
+                <input asp-for="age" class="form-control" />
+                <span asp-validation-for="age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="weight" class="control-label"></label>
+                <input asp-for="weight" class="form-control" />
+                <span asp-validation-for="weight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="vaccineHistory" class="control-label"></label>
+                <input asp-for="vaccineHistory" class="form-control" />
+                <span asp-validation-for="vaccineHistory" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="castration" class="control-label"></label>
+                <select asp-for="castration" class="form-control">
+                    <option value="" disabled selected>Seleccione el tipo de Castración</option>
+                    <option value="No">No</option>
+                    <option value="Ovariohisterectomía">Ovariohisterectomía</option>
+                    <option value="Orquiectomía">Orquiectomía</option>
+                </select>
+                <span asp-validation-for="castration" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            @if (!Model.status)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="reactivePet" name="reactivePet" value="true" />
+                    <label class="form-check-label" for="reactivePet">Reactivar Mascota</label>
+                </div>
+            }
+            <p></p>
+            <p></p>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn colorButton" />
+            </div>
+        </form>
+    </div>
+
+    <div class="card-footer">
+        <a asp-action="Index" class="btn btn-outline-secondary">Atrás</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#petTypeId").change(function () {
+                var petTypeId = $(this).val();
+                var selectedBreedId = '@Model.petBreedId'; // Raza previa
+
+                //limpia la raza sino esta nada seleccionado
+                if (!petTypeId) {
+                    $("#petBreedId").html('<option value="" disabled selected>Seleccione la Raza de la Mascota</option>');
+                    return;
+                }
+
+                // Obtiene las razas filtradas cuando se selecciona un tipo 
+                $.ajax({
+                    url: '@Url.Action("GetBreedsByType", "PetFiles")',
+                    type: 'GET',
+                    data: { petTypeId: petTypeId },
+                    success: function (data) {
+                        var petBreedDropdown = $("#petBreedId");
+                        petBreedDropdown.empty();
+                        petBreedDropdown.append('<option value="" disabled selected>Seleccione la Raza de la Mascota</option>');
+
+                        $.each(data, function (index, item) {
+                            petBreedDropdown.append($('<option>', {
+                                value: item.petBreedId,
+                                text: item.name,
+                                selected: item.petBreedId == selectedBreedId // Mantiene la selección
+                            }));
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+

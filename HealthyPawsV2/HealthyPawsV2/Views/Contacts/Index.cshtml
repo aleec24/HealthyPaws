@@ -1,0 +1,42 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.Contact>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- Botón para crear un nuevo contacto -->
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Create" class="btn colorButton">Crear Nuevo Contacto</a>
+    </div>
+</div>
+<br />
+
+<!-- Tabla de contactos -->
+<table class="table table-bordered">
+    <thead class="color">
+        <tr>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Email)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().Phone)</th>
+            <th class="text-white">@Html.DisplayNameFor(model => model.First().WhatsApp)</th>
+            <th class="text-white">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                <td>@Html.DisplayFor(modelItem => item.WhatsApp)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.contactId" class="btn btn-primary btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.contactId" class="btn btn-secondary btn-sm">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.contactId" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

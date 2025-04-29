@@ -1,0 +1,44 @@
+﻿@page
+@model HealthyPawsV2.Areas.Identity.Pages.Account.LogoutConfirmationModel
+@{
+    Layout = null; // Use no layout
+}
+
+<style>
+    body {
+        background-image: url('/images/GoldenPuppiesLogout.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .card {
+        width: 400px;
+        background-color: rgba(255, 255, 255, 0.6);
+        margin: 100px auto; 
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-body {
+        text-align: center;
+        padding: 40px 10px;
+        color: #B25A28;
+    }
+
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body text-center">
+            <h1 class="card-title">¡Hasta Pronto!</h1>
+            <p class="card-text">
+                Si deseas iniciar sesión nuevamente, <b>haz clíc
+                    <a asp-page="/Account/Login" class="btn btn-primary">aquí</a>
+                </b>.
+            </p>
+        </div>
+    </div>
+</div>

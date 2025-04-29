@@ -1,0 +1,41 @@
+﻿@model IEnumerable<HealthyPawsV2.DAL.Contact>
+
+@{
+    Layout = "~/Views/Shared/_ContactLayout.cshtml";
+}
+
+<h4 class="card-title"> @Html.DisplayNameFor(model => model.First().Phone)</h4>
+@foreach (var item in Model)
+{
+    @if (item.Email != null){
+    <div class="card h-100 card1">
+        <div class="card-body">
+            <p class="card-text">@Html.DisplayFor(modelItem => item.Phone)</p>
+        </div>
+        @if (item.WhatsApp == true)
+        {
+            <a style="padding-left:10px; padding-bottom:5px; color:darkorange" href="https://wa.me/@item.Phone" target="_blank">Contactar por WhatsApp</a>
+        }
+    </div>
+    }
+}
+
+<br />
+<h4 class="card-title"> @Html.DisplayNameFor(model => model.First().Email)</h4>
+@foreach (var item in Model)
+{
+    @if (item.Email != null)
+    {
+        <div class="card h-100 card1">
+            <div class="card-body">
+                <p class="card-text">@Html.DisplayFor(modelItem => item.Email)</p>
+            </div>
+        </div>
+    }
+}
+<br />
+<div class="card h-100 card1">
+    <div class="card-body">
+        <p class="card-text"><strong>En caso de que deseas tener tu propio perfil para iniciar sesión, tener acceso a tus mascotas y su información, por favor ponte en contacto con nosotros.</strong> </p>
+    </div>
+</div>
